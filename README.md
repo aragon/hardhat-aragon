@@ -40,7 +40,7 @@ This plugin provides the `publish` task which allows you to publish an `Aragon` 
 ### Usage
 
 ```
-hardhat publish --contract <STRING> --ipfs-api-url <STRING> [--dry-run] [--only-content] [--skip-app-build] [--skip-validation] bump [...constructorArgs]
+hardhat publish --contract <STRING> --ipfs-api-url <STRING> [--dry-run] [--only-content] [--skip-app-build] [--skip-validation] [--verify] [--confirmations <blocks>] [--constructor-args-path <path>] bump [...constructorArgsParams]
 
 ```
 
@@ -52,8 +52,11 @@ hardhat publish --contract <STRING> --ipfs-api-url <STRING> [--dry-run] [--only-
 * `--skip-app-build` Prevents building application
 * `--skip-validation` Prevents validation of artifact files
 * `--ipfs-api-url` Url to upload app content to IFPS
+* `--verify` Automatically verify contract
+* `--confirmations` Wait this number of blocks of confirmation for contract creation. Default to 1. Etherscan recommends waiting 5 blocks before verifying to ensure transaction available at etherscan's node
+* `--constructor-args-path` File path to a javascript module that exports the list of contract constructor arguments
 
 #### Positional Arguments
 
 * `bump` Type of bump (major, minor, patch) or sematic version. Use major for contract change.
-* `constructorArgs` Constructor arguments for the app contract, default [].
+* `constructorArgsParams` Constructor arguments for the app contract, Ignored if the --constructor-args-path option is used. default [].
