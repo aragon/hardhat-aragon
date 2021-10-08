@@ -11,6 +11,9 @@
     "watch": "tsc -w",
     "test": "yarn build && mocha --recursive \"test/**/*.ts\" --exit"
   },
+  "files": [
+    "dist/"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aragon/hardhat-aragon.git"
