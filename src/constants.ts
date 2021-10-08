@@ -7,6 +7,7 @@ export const DEFAULT_APP_SRC_PATH = 'app/'
 export const DEFAULT_APP_BUILD_PATH = 'dist/'
 export const DEFAULT_APP_BUILD_SCRIPT = 'build'
 export const DEFAULT_IGNORE_PATH = '.'
+export const DEFAULT_CONFIRMATIONS = 1
 
 // Standard expected Aragon file paths
 export const ARTIFACT_NAME = 'artifact.json'

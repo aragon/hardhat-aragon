@@ -10,6 +10,7 @@ import {
   DEFAULT_IPFS_API_ENDPOINT,
   DEFAULT_IPFS_GATEWAY,
   DEFAULT_APP_BUILD_SCRIPT,
+  DEFAULT_CONFIRMATIONS,
 } from './constants'
 import { TASK_PUBLISH } from './task-names'
 
@@ -52,6 +53,7 @@ extendConfig(
           userConfig.aragon?.ignoreFilesPath ?? DEFAULT_IGNORE_PATH
         )
       ),
+      confirmations: userConfig.aragon?.confirmations ?? DEFAULT_CONFIRMATIONS,
     }
   }
 )
@@ -75,9 +77,21 @@ task(TASK_PUBLISH, 'Publish a new app version to Aragon Package Manager')
     'http://localhost:5001',
     types.string
   )
+  .addOptionalParam(
+    'confirmations',
+    'Number of block confirmations to wait after contract creation',
+    undefined,
+    types.int
+  )
+  .addOptionalParam(
+    'constructorArgsPath',
+    'File path to a javascript module that exports the list of constructor arguments.',
+    undefined,
+    types.inputFile
+  )
   .addOptionalVariadicPositionalParam(
-    'constructorArgs',
-    'Constructor arguments for the app contract.',
+    'constructorArgsParams',
+    'Contract constructor arguments. Ignored if the --constructor-args-path option is used.',
     []
   )
   .addFlag(

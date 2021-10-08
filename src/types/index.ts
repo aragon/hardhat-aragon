@@ -39,6 +39,7 @@ export interface AragonConfig {
   appBuildOutputPath: string
   appBuildScript: string
   ignoreFilesPath: string
+  confirmations: number
 }
 
 export interface AragonUserConfig {
@@ -46,6 +47,7 @@ export interface AragonUserConfig {
   appBuildOutputPath?: string
   appBuildScript?: string
   ignoreFilesPath?: string
+  confirmations?: number
 }
 
 // The aragon manifest requires the use of camelcase for some names
@@ -129,7 +131,9 @@ export interface PublishTaskArguments extends HardhatArguments {
   skipValidation?: boolean
   dryRun?: boolean
   verify?: boolean
-  constructorArgs?: any[]
+  constructorArgsParams?: any[]
+  constructorArgsPath?: string
+  confirmations?: number
 }
 
 export interface AragonAppJson {

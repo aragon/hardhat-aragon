@@ -27,7 +27,7 @@ import {
   guessGatewayUrl,
   assertUploadContentResolve,
 } from '../utils/ipfs'
-import { TASK_VERIFY_CONTRACT } from '../task-names'
+import { TASK_VERIFY_CONTRACT, TASK_GET_CONSTRUCTOR_ARGS } from '../task-names'
 import {
   readArapp,
   parseAppName,
@@ -107,19 +107,31 @@ export async function publishTask(
     log(`Using provided contract address: ${contractAddress}`)
   } else if (!prevVersion || bump === 'major') {
     log('Deploying new contract.')
+    const confirmBlocks = args.confirmations || hre.config.aragon?.confirmations
+    const constructorArgs = await hre.run(TASK_GET_CONSTRUCTOR_ARGS, {
+      constructorArgsModule: args.constructorArgsPath,
+      constructorArgsParams: args.constructorArgsParams,
+    })
     contractAddress = await deployContract(
       hre,
       appContractName,
-      args.constructorArgs
+      constructorArgs,
+      confirmBlocks
     )
     log(`New contract address: ${contractAddress}`)
 
     if (args.verify) {
       log(`Verifying contract address: ${contractAddress}`)
-      await hre.run(TASK_VERIFY_CONTRACT, {
-        address: contractAddress,
-        constructorArguments: args.constructorArgs,
-      })
+      try {
+        await hre.run(TASK_VERIFY_CONTRACT, {
+          address: contractAddress,
+          constructorArguments: constructorArgs,
+        })
+      } catch (e) {
+        // do not stop on contract verification error
+        // let user verify manually later
+        log(`Error verifying contract ${(e as Error).message}`)
+      }
     }
   } else {
     contractAddress = prevVersion.contractAddress
