@@ -7,8 +7,6 @@ import { PublishTaskArguments, RepoContent } from '../types'
 
 import { log } from '../utils/logger'
 import * as apm from '../utils/apm'
-import deployContract from '../utils/deployContract'
-import { pinContent } from '../utils/ipfs/pinContent'
 import {
   generateArtifacts,
   validateArtifacts,
@@ -27,7 +25,7 @@ import {
   guessGatewayUrl,
   assertUploadContentResolve,
 } from '../utils/ipfs'
-import { TASK_VERIFY_CONTRACT, TASK_GET_CONSTRUCTOR_ARGS } from '../task-names'
+import { TASK_DEPLOY_SUBTASK, TASK_GET_CONSTRUCTOR_ARGS } from '../task-names'
 import {
   readArapp,
   parseAppName,
@@ -106,33 +104,18 @@ export async function publishTask(
     contractAddress = existingContractAddress
     log(`Using provided contract address: ${contractAddress}`)
   } else if (!prevVersion || bump === 'major') {
-    log('Deploying new contract.')
-    const confirmBlocks = args.confirmations || hre.config.aragon?.confirmations
-    const constructorArgs = await hre.run(TASK_GET_CONSTRUCTOR_ARGS, {
+    const confirmations = args.confirmations || hre.config.aragon?.confirmations
+    const constructorArguments = await hre.run(TASK_GET_CONSTRUCTOR_ARGS, {
       constructorArgsModule: args.constructorArgsPath,
       constructorArgsParams: args.constructorArgsParams,
     })
-    contractAddress = await deployContract(
-      hre,
-      appContractName,
-      constructorArgs,
-      confirmBlocks
-    )
-    log(`New contract address: ${contractAddress}`)
-
-    if (args.verify) {
-      log(`Verifying contract address: ${contractAddress}`)
-      try {
-        await hre.run(TASK_VERIFY_CONTRACT, {
-          address: contractAddress,
-          constructorArguments: constructorArgs,
-        })
-      } catch (e) {
-        // do not stop on contract verification error
-        // let user verify manually later
-        log(`Error verifying contract ${(e as Error).message}`)
-      }
-    }
+    contractAddress = await hre.run(TASK_DEPLOY_SUBTASK, {
+      contract: appContractName,
+      constructorArguments,
+      confirmations,
+      verify: args.verify,
+      dryRun: args.dryRun,
+    })
   } else {
     contractAddress = prevVersion.contractAddress
     log(`Reusing previous version contract address: ${contractAddress}`)
@@ -186,22 +169,6 @@ export async function publishTask(
   log(`Release assets uploaded to IPFS: ${contentHash}`)
 
   await assertUploadContentResolve(contentHash, hre.config.ipfs.gateway)
-
-  if (hre.config.ipfs.pinata && hre.config.ipfs.pinata.key !== '') {
-    log('Pinning content to pinata...')
-    const response = await pinContent({
-      contentHash,
-      appEnsName: finalAppEnsName,
-      version: nextVersion,
-      network: hre.network.name,
-      pinata: hre.config.ipfs.pinata,
-    })
-    if (response)
-      log(`Content pinned:
-        id: ${response.id}
-        status: ${response.status}
-        name: ${response.name}`)
-  }
 
   // Generate tx to publish new app to aragonPM
   const versionInfo = {

@@ -1,8 +1,8 @@
 import chalk, { ForegroundColor } from 'chalk'
 
-const publishTag = chalk.gray('publish     | ')
+let logTag = chalk.gray('aragon | ')
 
-export function _prependTag(
+function _prependTag(
   lines: string,
   tag: string,
   color?: typeof ForegroundColor
@@ -16,5 +16,5 @@ export function _prependTag(
 
 export function log(data: string): void {
   // eslint-disable-next-line no-console
-  console.log(_prependTag(data, publishTag))
+  console.log(_prependTag(data, logTag))
 }

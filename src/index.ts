@@ -1,5 +1,5 @@
 import path from 'path'
-import { extendConfig, task } from 'hardhat/config'
+import { extendConfig, task, subtask } from 'hardhat/config'
 import { HardhatConfig, HardhatUserConfig } from 'hardhat/types'
 import * as types from 'hardhat/internal/core/params/argumentTypes'
 
@@ -12,9 +12,10 @@ import {
   DEFAULT_APP_BUILD_SCRIPT,
   DEFAULT_CONFIRMATIONS,
 } from './constants'
-import { TASK_PUBLISH } from './task-names'
+import { TASK_PUBLISH, TASK_DEPLOY, TASK_DEPLOY_SUBTASK } from './task-names'
 
 import { publishTask } from './tasks/publish'
+import { deployTask, deploySubtask } from './tasks/deploy'
 
 // We ommit these imports beacuse they are peer dependencies and will be added
 // by the plugin user. Otherwise naming conflicts may araise
@@ -29,7 +30,6 @@ extendConfig(
     config.ipfs = {
       url: userConfig.ipfs?.url ?? DEFAULT_IPFS_API_ENDPOINT,
       gateway: userConfig.ipfs?.gateway ?? DEFAULT_IPFS_GATEWAY,
-      pinata: userConfig.ipfs?.pinata,
     }
 
     config.aragon = {
@@ -79,7 +79,7 @@ task(TASK_PUBLISH, 'Publish a new app version to Aragon Package Manager')
   )
   .addOptionalParam(
     'confirmations',
-    'Number of block confirmations to wait after contract creation',
+    'Number of blocks to wait for contract creation',
     undefined,
     types.int
   )
@@ -102,6 +102,45 @@ task(TASK_PUBLISH, 'Publish a new app version to Aragon Package Manager')
   .addFlag('skipAppBuild', 'Skip application build.')
   .addFlag('skipValidation', 'Skip validation of artifacts files.')
   .addFlag('dryRun', 'Output tx data without broadcasting')
-  .setAction(async (args, hre) => {
-    return publishTask(args, hre)
-  })
+  .setAction(publishTask)
+
+task(TASK_DEPLOY, 'Deploy a contract')
+  .addParam(
+    'contract',
+    'Contract name or fully qualified name, contract/Projects.sol:Projects',
+    undefined,
+    types.string
+  )
+  .addOptionalParam(
+    'confirmations',
+    'number of blocks to wait for contract deployment',
+    undefined,
+    types.int
+  )
+  .addFlag('verify', 'Automatically verify contract on Etherscan.')
+  .addFlag('dryRun', 'Output contract address without actually creating it')
+  .addOptionalParam(
+    'constructorArgsPath',
+    'File path to a javascript module that exports the list of arguments.',
+    undefined,
+    types.inputFile
+  )
+  .addOptionalVariadicPositionalParam(
+    'constructorArgsParams',
+    'Contract constructor arguments. Ignored if the --constructor-args-path option is used.',
+    []
+  )
+  .setAction(deployTask)
+
+subtask(TASK_DEPLOY_SUBTASK)
+  .addParam('contract', undefined, undefined, types.string)
+  .addOptionalParam(
+    'confirmations',
+    'number of blocks to wait',
+    undefined,
+    types.int
+  )
+  .addFlag('verify')
+  .addFlag('dryRun')
+  .addOptionalParam('constructorArguments', undefined, [], types.any)
+  .setAction(deploySubtask)

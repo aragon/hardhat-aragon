@@ -1,21 +1,14 @@
 import { utils } from 'ethers'
 import { HardhatArguments } from 'hardhat/types'
 
-export interface PinataConfig {
-  key: string
-  secret: string
-}
-
 export interface IpfsUserConfig {
   url?: string
   gateway?: string
-  pinata?: PinataConfig
 }
 
 export interface IpfsConfig {
   url: string
   gateway: string
-  pinata?: PinataConfig
 }
 
 export interface Dependencies {
@@ -134,6 +127,39 @@ export interface PublishTaskArguments extends HardhatArguments {
   constructorArgsParams?: any[]
   constructorArgsPath?: string
   confirmations?: number
+}
+
+export interface DeployTaskArguments extends HardhatArguments {
+  contract: string
+  constructorArgsParams?: any[]
+  constructorArgsPath?: string
+  confirmations?: number
+  dryRun?: boolean
+  verify?: boolean
+}
+
+export interface DeploySubtaskArguments extends HardhatArguments {
+  contract: string
+  constructorArguments?: any[]
+  confirmations?: number
+  dryRun?: boolean
+  verify?: boolean
+}
+
+export type DeployContractArguments = {
+  contract: string
+  constructorArguments?: any[]
+  confirmations?: number
+}
+
+export type DeployContractDryRunArguments = {
+  contract: string
+  constructorArguments?: any[]
+}
+
+export type VerifyTaskArguments = {
+  contractAddress: string
+  constructorArguments?: any[]
 }
 
 export interface AragonAppJson {
