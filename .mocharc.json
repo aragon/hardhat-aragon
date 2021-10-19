@@ -1,0 +1,9 @@
+{
+  "require": [
+    "ts-node/register/files",
+    "tsconfig-paths/register",
+    "source-map-support/register"
+  ],
+  "ignore": ["test/fixture-projects/**/*"],
+  "timeout": 6000
+}

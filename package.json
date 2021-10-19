@@ -1,0 +1,70 @@
+{
+  "name": "@aragon/hardhat-aragon",
+  "version": "0.2.0",
+  "description": "Hardhat plugin for developing Aragon apps.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "lint:fix": "prettier --write 'src/**/*.{js,ts}' 'test/**/*.{js,ts}' && eslint --fix",
+    "lint": "eslint",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "yarn build && mocha --recursive \"test/**/*.ts\" --exit"
+  },
+  "files": [
+    "dist/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aragon/hardhat-aragon.git"
+  },
+  "keywords": [
+    "aragon",
+    "hardhat",
+    "plugin",
+    "ethereum",
+    "smart-contracts"
+  ],
+  "author": "Aragon Association <legal@aragon.org>",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/aragon/hardhat-aragon/issues"
+  },
+  "homepage": "https://github.com/aragon/hardhat-aragon#readme",
+  "dependencies": {
+    "@solidity-parser/parser": "^0.12.2",
+    "chalk": "^4.1.1",
+    "execa": "^5.0.0",
+    "fs-extra": "^8.1.0",
+    "ipfs-http-client": "^50.0.0",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "@aragon/abis": "^1.1.0",
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@types/fs-extra": "^8.1.0",
+    "@types/lodash": "^4.14.169",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "12.7.5",
+    "@types/node-fetch": "^2.5.5",
+    "@types/semver": "^7.1.0",
+    "@typescript-eslint/eslint-plugin": "^2.16.0",
+    "@typescript-eslint/parser": "^2.16.0",
+    "chai": "^4.3.4",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "ethers": "^5.1.4",
+    "hardhat": "^2.6.4",
+    "mocha": "^9.1.2",
+    "prettier": "2.0.5",
+    "ts-node": "^8.1.0",
+    "tsconfig-paths": "^3.11.0",
+    "typescript": "^4.2.4"
+  },
+  "peerDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "ethers": "^5.1.4",
+    "hardhat": "^2.6.4"
+  }
+}
