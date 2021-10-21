@@ -124,6 +124,7 @@ export interface PublishTaskArguments extends HardhatArguments {
   skipValidation?: boolean
   dryRun?: boolean
   verify?: boolean
+  validateUpload?: boolean
   constructorArgsParams?: any[]
   constructorArgsPath?: string
   confirmations?: number
