@@ -102,6 +102,7 @@ task(TASK_PUBLISH, 'Publish a new app version to Aragon Package Manager')
   .addFlag('skipAppBuild', 'Skip application build.')
   .addFlag('skipValidation', 'Skip validation of artifacts files.')
   .addFlag('dryRun', 'Output tx data without broadcasting')
+  .addFlag('validateUpload', 'Validate new content uploaded to ipfs')
   .setAction(publishTask)
 
 task(TASK_DEPLOY, 'Deploy a contract')

@@ -168,7 +168,11 @@ export async function publishTask(
   })
   log(`Release assets uploaded to IPFS: ${contentHash}`)
 
-  await assertUploadContentResolve(contentHash, hre.config.ipfs.gateway)
+  if (args.validateUpload) {
+    log(`Validating assets uploaded to IPFS`)
+    await assertUploadContentResolve(contentHash, hre.config.ipfs.gateway)
+    log(`Finish validating assets uploaded to IPFS`)
+  }
 
   // Generate tx to publish new app to aragonPM
   const versionInfo = {
