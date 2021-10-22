@@ -3,7 +3,7 @@ import { AragonPluginError } from '../errors'
 import { HardhatRuntimeEnvironment, HttpNetworkConfig } from 'hardhat/types'
 
 import { DEFAULT_IPFS_API_ENDPOINT, EXPLORER_CHAIN_URLS } from '../constants'
-import { PublishTaskArguments, RepoContent } from '../types'
+import { PublishTaskArguments } from '../types'
 
 import { log } from '../utils/logger'
 import * as apm from '../utils/apm'
@@ -135,21 +135,13 @@ export async function publishTask(
   }
 
   if (!args.onlyContent) {
-    let content: RepoContent
-    if (prevVersion && bump !== 'major') {
-      log(`Resolving Aragon artifacts from Aragon Package Manager`)
-      content = await apm.resolveRepoContentUri(prevVersion.contentUri, {
-        ipfsGateway: hre.config.ipfs.gateway,
-      })
-    } else {
-      log(`Generating Aragon app artifacts`)
-      content = await generateArtifacts(
-        arapp,
-        finalAppEnsName,
-        appContractName,
-        hre
-      )
-    }
+    log(`Generating Aragon app artifacts`)
+    const content = await generateArtifacts(
+      arapp,
+      finalAppEnsName,
+      appContractName,
+      hre
+    )
 
     writeArtifacts(appBuildOutputPath, content)
 
