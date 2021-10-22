@@ -135,21 +135,13 @@ export async function publishTask(
   }
 
   if (!args.onlyContent) {
-    let content: RepoContent
-    if (prevVersion && bump !== 'major') {
-      log(`Resolving Aragon artifacts from Aragon Package Manager`)
-      content = await apm.resolveRepoContentUri(prevVersion.contentUri, {
-        ipfsGateway: hre.config.ipfs.gateway,
-      })
-    } else {
-      log(`Generating Aragon app artifacts`)
-      content = await generateArtifacts(
-        arapp,
-        finalAppEnsName,
-        appContractName,
-        hre
-      )
-    }
+    log(`Generating Aragon app artifacts`)
+    const content = await generateArtifacts(
+      arapp,
+      finalAppEnsName,
+      appContractName,
+      hre
+    )
 
     writeArtifacts(appBuildOutputPath, content)
 
