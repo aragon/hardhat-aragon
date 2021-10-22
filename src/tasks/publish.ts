@@ -3,7 +3,7 @@ import { AragonPluginError } from '../errors'
 import { HardhatRuntimeEnvironment, HttpNetworkConfig } from 'hardhat/types'
 
 import { DEFAULT_IPFS_API_ENDPOINT, EXPLORER_CHAIN_URLS } from '../constants'
-import { PublishTaskArguments, RepoContent } from '../types'
+import { PublishTaskArguments } from '../types'
 
 import { log } from '../utils/logger'
 import * as apm from '../utils/apm'

@@ -1,5 +1,6 @@
 import { TASK_FLATTEN_GET_FLATTENED_SOURCE } from 'hardhat/builtin-tasks/task-names'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { TASK_COMPILE_CONTRACT } from '../../task-names'
 
 import { MANIFEST_NAME } from '../../constants'
 import { AragonAppJson, AragonManifest, RepoContent } from '../../types'
@@ -22,6 +23,8 @@ export async function generateArtifacts(
   hre: HardhatRuntimeEnvironment
 ): Promise<RepoContent> {
   const { roles: appRoles, dependencies: appDependencies = [] } = arapp
+
+  await hre.run(TASK_COMPILE_CONTRACT)
 
   // Get ABI from generated artifacts in compilation
   const { abi } = await hre.artifacts.readArtifact(appContractName)
